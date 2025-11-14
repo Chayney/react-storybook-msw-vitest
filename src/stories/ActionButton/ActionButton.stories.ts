@@ -4,7 +4,7 @@ import { http, HttpResponse } from "msw";
 
 const meta: Meta<typeof ActionButton> = {
     component: ActionButton,
-    title: "ActionButton",
+    title: "Buttons/ActionButton",
     argTypes: {
         style: { control: "object" }
     },
