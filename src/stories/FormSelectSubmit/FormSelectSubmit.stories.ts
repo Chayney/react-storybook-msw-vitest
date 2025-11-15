@@ -2,6 +2,24 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FormSelectSubmit } from "./FormSelectSubmit";
 import { http, HttpResponse } from "msw";
 
+export const mockHandler = [
+    http.get("/options", () => {
+        return HttpResponse.json({
+            options: [
+                { label: "Option 1", value: "opt-1" },
+                { label: "Option 2", value: "opt-2" },
+                { label: "Option 3", value: "opt-3" },
+            ],
+        });
+    }),
+
+    http.post("/submit-form", async () => {
+        return HttpResponse.json({
+            message: "Form received successfully",
+        });
+    }),
+];
+
 const meta: Meta<typeof FormSelectSubmit> = {
     component: FormSelectSubmit,
     title: "Forms/FormSelectSubmit",
@@ -10,35 +28,15 @@ const meta: Meta<typeof FormSelectSubmit> = {
             control: "object", // Storybook 上で変更できる
         },
         onSubmit: {
-            action: "submit-form", // controls パネルに表示される
+            action: "submit-form", // Controls パネルに表示される
         },
     },
     parameters: {
         msw: {
-            handlers: [
-                // セレクト項目取得 API
-                http.get("/options", () => {
-                    return HttpResponse.json({
-                        options: [
-                            { label: "Option 1", value: "opt-1" },
-                            { label: "Option 2", value: "opt-2" },
-                            { label: "Option 3", value: "opt-3" },
-                        ],
-                    });
-                }),
-
-                // フォーム送信 API
-                http.post("/submit-form", async () => {
-                    return HttpResponse.json({
-                        message: "Form received successfully",
-                    });
-                }),
-            ],
+            handlers: mockHandler
         },
-        actions: {
-            handles: ["click"]
-        }
     },
+    excludeStories: ['mockHandler']
 };
 
 export default meta;
@@ -53,7 +51,7 @@ export const Default: Story = {
             backgroundColor: "#f0f0f0",
         },
         onSubmit: (selected: string) => {
-            console.log("submit-form", selected);
+            console.log("submit-form", selected); // Controls パネルに表示される
         },
     },
 };

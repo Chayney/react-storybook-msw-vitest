@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type{ FC } from "react";
+import type { FC } from "react";
 
 type Option = {
     label: string;
@@ -33,7 +33,9 @@ export const FormSelectSubmit: FC<Props> = ({ style, onSubmit }) => {
         fetchOptions();
     }, []);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault(); // フォーム送信時のデフォルト動作を防止
+
         if (!selected) return alert("Please select an option.");
 
         setState("sending");
@@ -54,7 +56,7 @@ export const FormSelectSubmit: FC<Props> = ({ style, onSubmit }) => {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <form style={{ display: "flex", flexDirection: "column", gap: 12 }} onSubmit={handleSubmit}>
             <select
                 style={style}
                 value={selected}
@@ -70,9 +72,10 @@ export const FormSelectSubmit: FC<Props> = ({ style, onSubmit }) => {
             </select>
 
             <button
+                type="submit"
                 style={style}
-                onClick={handleSubmit}
                 disabled={state === "sending"}
+                aria-label="Submit Form"
             >
                 {{
                     idle: "Submit Form",
@@ -85,6 +88,6 @@ export const FormSelectSubmit: FC<Props> = ({ style, onSubmit }) => {
 
             {state === "success" && <p style={{ color: "green" }}>Form submitted successfully!</p>}
             {state === "error" && <p style={{ color: "red" }}>Error occurred.</p>}
-        </div>
+        </form>
     );
 };
